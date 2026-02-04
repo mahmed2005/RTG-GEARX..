@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RTG-GEARX | متجر المحترفين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-red: #e83137;
+            --silver-text: #ebebeb;
+            --bg-dark: #1a191f; /* جعلته أغمق ليعطي فخامة للهاتف */
+            --bg-card: #25242b;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--silver-text);
+            line-height: 1.6;
+            padding-bottom: 20px;
+        }
+
+        /* --- الهيدر الاحترافي للهاتف --- */
+        header {
+            background: rgba(26, 25, 31, 0.95);
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column; /* ترتيب العناصر بشكل عمودي ليتناسب مع الهاتف */
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--primary-red);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .header-top {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-img { height: 45px; width: auto; }
+
+        .nav-links {
+            display: flex;
+            gap: 5px;
+            width: 100%;
+            justify-content: center;
+            overflow-x: auto; /* للسماح بالتمرير إذا زادت الأزرار */
+            padding-bottom: 5px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--silver-text);
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 8px 12px;
+            white-space: nowrap;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .nav-btn.active {
+            background: var(--primary-red);
+            color: white;
+        }
+
+        /* --- المنتجات (2 في الصف للهاتف) --- */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* دائماً منتجان بجانب بعضهما */
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+
+        .product-img-container {
+            width: 100%;
+            height: 140px;
+            background: #121115;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-img-container img { max-width: 90%; max-height: 90%; object-fit: contain; }
+
+        .product-name { font-size: 0.85rem; height: 40px; overflow: hidden; margin-bottom: 5px; }
+        .product-price { color: var(--primary-red); font-weight: 900; font-size: 1rem; margin-bottom: 8px; }
+
+        .add-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* --- صفحة السوشيال ميديا (المطلوبة) --- */
+        .social-page-content {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .video-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--primary-red);
+        }
+
+        /* --- أيقونات الفوتر المتحركة --- */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .social-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: #2a2930;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 26px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* تأثير الانبثاق عند اللمس أو الحركة */
+        .social-btn:hover, .social-btn:active {
+            transform: translateY(-12px) scale(1.2);
+            box-shadow: 0 10px 20px rgba(232, 49, 55, 0.4);
+        }
+
+        .social-btn.tiktok:hover { background: #00f2ea; color: black; }
+        .social-btn.insta:hover { background: #e1306c; }
+        .social-btn.face:hover { background: #1877f2; }
+        .social-btn.whatsapp:hover { background: #25d366; }
+
+        /* --- السلة والفوتر --- */
+        .cart-modal {
+            position: fixed; top: 0; left: -100%; width: 100%; height: 100vh;
+            background: var(--bg-dark); z-index: 2000; padding: 25px; transition: 0.4s ease;
+        }
+        .cart-modal.active { left: 0; }
+        
+        .checkout-form {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: var(--bg-card); padding: 25px; z-index: 3000; width: 90%;
+            border-radius: 20px; border: 2px solid var(--primary-red); display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-top">
+            <img src="EDE.jpg" alt="Logo" class="logo-img">
+            <div class="cart-icon" onclick="toggleCart()" style="position:relative; font-size:24px;">
+                <i class="fas fa-shopping-basket"></i>
+                <span id="cartCount" style="position:absolute; top:-10px; right:-10px; background:var(--primary-red); border-radius:50%; width:20px; height:20px; font-size:12px; display:flex; align-items:center; justify-content:center;">0</span>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <button class="nav-btn active" onclick="switchPage('home')">الرئيسية</button>
+            <button class="nav-btn" onclick="switchPage('shop')">المتجر</button>
+            <button class="nav-btn" onclick="switchPage('social')">مواقعنا</button>
+        </nav>
+    </header>
+
+    <div id="home-page" class="page-section">
+        <section style="text-align:center; padding: 40px 20px;">
+            <h1 style="font-family:'Orbitron'; color:var(--primary-red); font-size:2rem;">RTG-GEARX</h1>
+            <p style="color:#888;">أقوى معدات الجيمنج في ليبيا</p>
+        </section>
+        <h3 style="margin-right:20px;">المنتجات الأكثر مبيعاً</h3>
+        <div class="products-grid" id="featuredContainer"></div>
+    </div>
+
+    <div id="shop-page" class="page-section" style="display:none;">
+        <h2 style="text-align:center; margin:20px 0;">جميع المنتجات</h2>
+        <div class="products-grid" id="allProductsContainer"></div>
+    </div>
+
+    <div id="social-page" class="page-section" style="display:none;">
+        <div class="social-page-content">
+            <div class="video-card">
+                <i class="fab fa-tiktok fa-3x" style="color:var(--primary-red); margin-bottom:15px;"></i>
+                <h3>تابعنا على تيك توك</h3>
+                <p>لمشاهدة أحدث المراجعات والعروض</p>
+                <a href="https://www.tiktok.com/@rtg...gearx" class="add-btn" style="display:inline-block; margin-top:15px; text-decoration:none;">زيارة الحساب</a>
+            </div>
+            <div class="video-card">
+                <i class="fab fa-instagram fa-3x" style="color:var(--primary-red); margin-bottom:15px;"></i>
+                <h3>إنستقرام</h3>
+                <p>صور المنتجات بدقة عالية</p>
+                <a href="https://www.instagram.com/rtg_gearx/" class="add-btn" style="display:inline-block; margin-top:15px; text-decoration:none;">زيارة الحساب</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="social-links">
+            <a href="https://www.tiktok.com/@rtg...gearx" class="social-btn tiktok"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.instagram.com/rtg_gearx/" class="social-btn insta"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61571660318355" class="social-btn face"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://wa.me/218934590635" class="social-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p style="text-align:center; color:#555;">RTG-GEARX © 2026</p>
+    </footer>
+
+    <div class="cart-modal" id="cartModal">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>سلتك</h2>
+            <span onclick="toggleCart()" style="font-size:2.5rem;">&times;</span>
+        </div>
+        <div id="cartItems" style="margin-top:20px; overflow-y:auto; height:70vh;"></div>
+        <div style="border-top:2px solid #333; padding-top:20px;">
+            <p style="display:flex; justify-content:space-between; font-size:1.3rem;"><span>المجموع:</span> <span id="totalPrice">0 د.ل</span></p>
+            <button class="add-btn" style="padding:18px; font-size:1.1rem; margin-top:15px;" onclick="openCheckout()">إتمام الطلب الآن</button>
+        </div>
+    </div>
+
+    <div class="checkout-form" id="checkoutForm">
+        <h3 style="text-align:center; margin-bottom:20px;">تأكيد الطلب</h3>
+        <input type="text" id="cName" placeholder="الاسم" style="width:100%; padding:15px; margin-bottom:10px; background:#111; color:white; border:none; border-radius:10px;">
+        <input type="tel" id="cPhone" placeholder="رقم الهاتف" style="width:100%; padding:15px; margin-bottom:10px; background:#111; color:white; border:none; border-radius:10px;">
+        <button class="add-btn" style="background:#25d366;" onclick="sendWhatsApp()">إرسال واتساب <i class="fab fa-whatsapp"></i></button>
+        <button class="nav-btn" style="width:100%; margin-top:10px;" onclick="closeCheckout()">إلغاء</button>
+    </div>
+
+    <script>
+        // --- قائمة الـ 23 منتج بالكامل ---
+        const products = [
+            { id: 1, name: "مبرد (MEMO CX 07)", price: 75, category: "featured", img: "akjgejkg.png" },
+            { id: 2, name: "مبرد (MEMO CX 08 PRO)", price: 120, category: "featured", img: "memo-cx08-hight-power-mobile-phone-radiator3043a.png" },
+            { id: 3, name: "سماعة (RX3 PRO)", price: 95, category: "featured", img: "product_image-img_2964-0717.png" },
+            { id: 4, name: "مبرد (MEMO CX 08)", price: 115, category: "featured", img: "1_d096a3cc-5b81-4af5-85d0-38ff2cdac644.png" },
+            { id: 5, name: "موزع حرارة", price: 25, category: "normal", img: "001_Heat-Distributor.png" },
+            { id: 6, name: "مبرد (MEMO CX 12)", price: 95, category: "normal", img: "default-title-memo-cx12-36133771018287.png" },
+            { id: 7, name: "مبرد (MEMO CX 06)", price: 70, category: "normal", img: "MEMO-CX06-Phone-Cooler-15W-1-600x600.png" },
+            { id: 8, name: "مبرد (MEMO CX 10)", price: 100, category: "normal", img: "11172-800x800.png" },
+            { id: 9, name: "مبرد (MEMO CX 15)", price: 120, category: "normal", img: "cx15.png" },
+            { id: 10, name: "مبرد (MEMO CX 05)", price: 135, category: "normal", img: "2025_06_06_23_46_IMG_2088.png" },
+            { id: 11, name: "سماعة (G27)", price: 135, category: "normal", img: "H96ce48efa82b471bb65ba620783ff61eF.png" },
+            { id: 12, name: "سماعة (M416)", price: 85, category: "normal", img: "51HK9qTd6BL.png" },
+            { id: 13, name: "قفازات (VIBER)", price: 25, category: "normal", img: "VIBER.png" },
+            { id: 14, name: "مايك (microphone 3.5)", price: 40, category: "normal", img: "mik 3.5.png" },
+            { id: 15, name: "مايك (Plokama)", price: 155, category: "normal", img: "Plokama MIK .png" },
+            { id: 16, name: "تحويلة (3 IN 1 HDTV)", price: 80, category: "normal", img: "3 IN 1 HDTV.png" },
+            { id: 17, name: "مثبت هاتف (Ring Light)", price: 55, category: "normal", img: " Ring Light.png" },
+            { id: 18, name: "سماعات (BOROFONE 3.5)", price: 30, category: "normal", img: "Earphones BOROFONE 3.5.png" },
+            { id: 19, name: "سماعات (samsung)", price: 35, category: "normal", img: "samsunfg.png" },
+            { id: 20, name: "مايك (K15)", price: 100, category: "normal", img: "mik 2.png" },
+            { id: 21, name: "سماعات (airpods 2 pro)", price: 80, category: "normal", img: "airpods.png" },
+            { id: 22, name: "تحويلة (شحن وسماعة)", price: 30, category: "normal", img: "adabtr.png" },
+            { id: 23, name: "سماعات (BOROFONE Type-C)", price: 30, category: "normal", img: "Earphones BOROFONE.png" }
+        ];
+
+        let cart = [];
+
+        function render() {
+            const feat = document.getElementById('featuredContainer');
+            const all = document.getElementById('allProductsContainer');
+            const draw = (p) => `
+                <div class="product-card">
+                    <div class="product-img-container"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/100'"></div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-price">${p.price} د.ل</div>
+                    <button class="add-btn" onclick="addToCart(${p.id})">أضف للسلة</button>
+                </div>`;
+            feat.innerHTML = products.filter(p=>p.category==='featured').map(draw).join('');
+            all.innerHTML = products.map(draw).join('');
+        }
+
+        function switchPage(page) {
+            document.querySelectorAll('.page-section').forEach(p => p.style.display = 'none');
+            document.getElementById(page + '-page').style.display = 'block';
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function addToCart(id) {
+            cart.push(products.find(p=>p.id===id));
+            document.getElementById('cartCount').innerText = cart.length;
+            updateCart();
+        }
+
+        function updateCart() {
+            const items = document.getElementById('cartItems');
+            items.innerHTML = cart.map((p,i)=>`
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; background:#111; padding:15px; border-radius:10px;">
+                    <span>${p.name}</span>
+                    <span>${p.price} د.ل <i class="fas fa-trash" onclick="remove(${i})" style="color:red; margin-right:10px;"></i></span>
+                </div>`).join('');
+            document.getElementById('totalPrice').innerText = cart.reduce((a,b)=>a+b.price, 0) + ' د.ل';
+        }
+
+        function remove(i) { cart.splice(i,1); document.getElementById('cartCount').innerText = cart.length; updateCart(); }
+        function toggleCart() { document.getElementById('cartModal').classList.toggle('active'); }
+        function openCheckout() { document.getElementById('checkoutForm').style.display='block'; }
+        function closeCheckout() { document.getElementById('checkoutForm').style.display='none'; }
+
+        function sendWhatsApp() {
+            const n = document.getElementById('cName').value;
+            const p = document.getElementById('cPhone').value;
+            if(!n || !p) return alert('البيانات ناقصة');
+            let m = `طلب جديد - RTG GEARX\n`;
+            cart.forEach(i=>m+=`- ${i.name} (${i.price})\n`);
+            m+=`المجموع: ${cart.reduce((a,b)=>a+b.price,0)}\nالاسم: ${n}\nالهاتف: ${p}`;
+            window.open(`https://wa.me/218934590635?text=${encodeURIComponent(m)}`);
+        }
+
+        render();
+    </script>
+</body>
+</html>
