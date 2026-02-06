@@ -151,7 +151,7 @@
             <input type="text" id="buyer-name" placeholder="اسمك الكامل">
             <input type="tel" id="buyer-phone" placeholder="رقم هاتف الواتساب">
             <div class="modal-btns">
-                <button class="modal-btn btn-confirm" onclick="sendPubgFinal()">إرسال للوسيط</button>
+                <button class="modal-btn btn-confirm" onclick="sendPubgFinal()">تأكيد الطلب</button>
                 <button class="modal-btn btn-cancel" onclick="closeModal('pubg-form-modal')">إلغاء</button>
             </div>
         </div>
@@ -243,6 +243,7 @@
                         <div class="pubg-details">
                             <div><b>المستوى:</b> ${c[3]}</div><div><b>الميثيك:</b> ${c[4]}</div>
                             <div><b>الأسلحة:</b> ${c[7]}</div><div><b>السعر:</b> ${price} د.ل</div>
+							<div><b>عدد السيارت:</b> ${c[8]}</div><div><b>اسم الحساب:</b> ${c[2]}</div>
                         </div>
                         <button class="btn-add" style="background:var(--gold); color:#000;" onclick="startPubgBuy('${acc}','${price}','${seller}','${phone}')">طلب شراء عبر الوسيط</button>
                     </div>`;
