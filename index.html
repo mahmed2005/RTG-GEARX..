@@ -42,11 +42,10 @@
         .pubg-user-header { background: rgba(255, 255, 255, 0.05); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
         .seller-name { font-weight: bold; color: var(--gold); }
         .verified-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; }
-        .pubg-main-img { width: 100%; height: 230px; object-fit: cover; border-bottom: 2px solid var(--gold); }
+        .pubg-main-img { width: 100%; height: 230px; object-fit: cover; border-bottom: 2px solid var(--gold); background: #000; }
         .pubg-details { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); font-size: 0.8rem; }
         .pubg-details b { color: var(--gold); margin-left: 4px; }
 
-        /* نوافذ جمع البيانات */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: none; align-items: center; justify-content: center; }
         .modal-box { background: var(--card); width: 90%; max-width: 400px; padding: 25px; border-radius: 20px; border: 2px solid var(--red); text-align: center; }
         .modal-box h3 { margin-bottom: 15px; color: var(--gold); }
@@ -83,7 +82,7 @@
         <button class="nav-btn" onclick="showPage('social', this)">صفحتنى الميديا</button>
     </nav>
 
-        <div id="home-page" class="page">
+    <div id="home-page" class="page">
         <div style="padding: 40px 20px; text-align: center;">
            <h1 style="font-family:'Orbitron'; color:var(--red); letter-spacing:2px;">RTG-GEARX</h1>
             <p style="color: #888;">المنتجات الأكثر طلباً هذا الأسبوع</p>
@@ -103,7 +102,6 @@
             </button>
         </div>
         <div id="pubg-container"></div>
-		 <p style="text-align: center; padding: 50px; color: #666;">جاري تحميل الحسابات المعتمدة...</p>
     </div>
 
    <div id="social-page" class="page" style="display:none;">
@@ -225,31 +223,37 @@
 
         async function loadPubgData() {
             const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:csv`;
-            const res = await fetch(url);
-            const data = await res.text();
-            const rows = data.split('\n').slice(1);
-            let html = '';
-            rows.forEach(row => {
-                const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if (c[16]?.replace(/"/g,'').trim() === "نعم") {
-                    const seller = c[1].replace(/"/g,'');
-                    const acc = c[2].replace(/"/g,'');
-                    const price = c[11].replace(/"/g,'');
-                    const phone = c[12].replace(/"/g,'');
-                    html += `
-                    <div class="card pubg-card">
-                        <div class="pubg-user-header"><span class="seller-name">${seller}</span><span class="verified-badge">موثق</span></div>
-                        <img src="${processDriveUrl(c[14])}" class="pubg-main-img">
-                        <div class="pubg-details">
-                            <div><b>المستوى:</b> ${c[3]}</div><div><b>الميثيك:</b> ${c[4]}</div>
-                            <div><b>الأسلحة:</b> ${c[7]}</div><div><b>السعر:</b> ${price} د.ل</div>
-							<div><b>عدد السيارت:</b> ${c[8]}</div><div><b>اسم الحساب:</b> ${c[2]}</div>
-                        </div>
-                        <button class="btn-add" style="background:var(--gold); color:#000;" onclick="startPubgBuy('${acc}','${price}','${seller}','${phone}')">طلب شراء عبر الوسيط</button>
-                    </div>`;
-                }
-            });
-            document.getElementById('pubg-container').innerHTML = html;
+            try {
+                const res = await fetch(url);
+                const data = await res.text();
+                const rows = data.split('\n').slice(1);
+                let html = '';
+                rows.forEach(row => {
+                    const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (c[16]?.replace(/"/g,'').trim() === "نعم") {
+                        const seller = c[1].replace(/"/g,'');
+                        const acc = c[2].replace(/"/g,'');
+                        const price = c[11].replace(/"/g,'');
+                        const phone = c[12].replace(/"/g,'');
+                        const videoUrl = processDriveUrl(c[14]); // رابط الفيديو من العمود 14
+
+                        html += `
+                        <div class="card pubg-card">
+                            <div class="pubg-user-header"><span class="seller-name">${seller}</span><span class="verified-badge">موثق</span></div>
+                            
+                            <video src="${videoUrl}" class="pubg-main-img" autoplay muted loop playsinline></video>
+                            
+                            <div class="pubg-details">
+                                <div><b>المستوى:</b> ${c[3]}</div><div><b>الميثيك:</b> ${c[4]}</div>
+                                <div><b>الأسلحة:</b> ${c[7]}</div><div><b>السعر:</b> ${price} د.ل</div>
+                                <div><b>عدد السيارت:</b> ${c[8]}</div><div><b>اسم الحساب:</b> ${c[2]}</div>
+                            </div>
+                            <button class="btn-add" style="background:var(--gold); color:#000;" onclick="startPubgBuy('${acc}','${price}','${seller}','${phone}')">طلب شراء عبر الوسيط</button>
+                        </div>`;
+                    }
+                });
+                document.getElementById('pubg-container').innerHTML = html || '<p style="text-align:center; padding:50px;">لا يوجد حسابات معروضة حالياً.</p>';
+            } catch (e) { console.error("Error loading data", e); }
         }
 
         function addToCart(id) {
@@ -278,7 +282,6 @@
             btn.classList.add('active');
         }
 
-        // منطق شراء المعدات (المتجر)
         function openCheckoutModal() {
             if(cart.length === 0) return alert("السلة فارغة!");
             document.getElementById('checkout-modal').style.display = 'flex';
@@ -289,24 +292,14 @@
             const ph1 = document.getElementById('cust-phone').value;
             const ph2 = document.getElementById('cust-phone2').value;
             const loc = document.getElementById('cust-loc').value;
-
             if(!name || !ph1 || !loc) return alert("يرجى ملء كافة البيانات الأساسية");
-
             let itemsMsg = cart.map(i => `- ${i.name} (${i.price} د.ل)`).join('%0A');
             let total = cart.reduce((a,b) => a + b.price, 0);
-            let msg = `*طلب شراء معدات - RTG-GEARX*%0A%0A` +
-                      `👤 الاسم: ${name}%0A` +
-                      `📞 الهاتف: ${ph1}%0A` +
-                      `📞 هاتف احتياط: ${ph2}%0A` +
-                      `📍 الموقع: ${loc}%0A%0A` +
-                      `*الطلبات:*%0A${itemsMsg}%0A%0A` +
-                      `💰 *الإجمالي:* ${total} د.ل`;
-            
+            let msg = `*طلب شراء معدات - RTG-GEARX*%0A%0A👤 الاسم: ${name}%0A📞 الهاتف: ${ph1}%0A📞 احتياط: ${ph2}%0A📍 الموقع: ${loc}%0A%0A*الطلبات:*%0A${itemsMsg}%0A%0A💰 الإجمالي: ${total} د.ل`;
             window.open(`https://wa.me/${adminPhone}?text=${msg}`);
             closeModal('checkout-modal');
         }
 
-        // منطق شراء الحسابات (ببجي)
         function startPubgBuy(acc, price, seller, phone) {
             tempPubg = { acc, price, seller, phone };
             document.getElementById('pubg-confirm-text').innerText = `هل أنت متأكد من شراء حساب "${acc}"؟`;
@@ -321,20 +314,8 @@
         function sendPubgFinal() {
             const bName = document.getElementById('buyer-name').value;
             const bPhone = document.getElementById('buyer-phone').value;
-
             if(!bName || !bPhone) return alert("يرجى ملء بياناتك لإتمام الشراء");
-
-            let msg = `*طلب وساطة حساب ببجي - RTG*%0A%0A` +
-                      `🛒 *بيانات المشتري:*%0A` +
-                      `- الاسم: ${bName}%0A` +
-                      `- الهاتف: ${bPhone}%0A%0A` +
-                      `🎮 *بيانات الحساب:*%0A` +
-                      `- اسم الحساب: ${tempPubg.acc}%0A` +
-                      `- السعر: ${tempPubg.price} د.ل%0A%0A` +
-                      `👤 *بيانات البائع:*%0A` +
-                      `- الاسم: ${tempPubg.seller}%0A` +
-                      `- الهاتف: ${tempPubg.phone}`;
-
+            let msg = `*طلب وساطة حساب ببجي - RTG*%0A%0A🛒 *بيانات المشتري:*%0A- الاسم: ${bName}%0A- الهاتف: ${bPhone}%0A%0A🎮 *بيانات الحساب:*%0A- اسم الحساب: ${tempPubg.acc}%0A- السعر: ${tempPubg.price} د.ل%0A%0A👤 *بيانات البائع:*%0A- الاسم: ${tempPubg.seller}%0A- الهاتف: ${tempPubg.phone}`;
             window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(msg)}`);
             closeModal('pubg-form-modal');
         }
