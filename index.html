@@ -463,12 +463,26 @@
         }
 
         function sendPubgFinal() {
-            const bName = document.getElementById('buyer-name').value;
-            const bPhone = document.getElementById('buyer-phone').value;
-            if(!bName || !bPhone) return alert("ادخل بياناتك");
-            let msg = `طلب شراء حساب ببجي:%0Aالحساب: ${tempPubg.acc}%0Aالمشتري: ${bName}%0Aهاتف المشتري: ${bPhone}`;
-            window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(msg)}`);
-        }
+    const bName = document.getElementById('buyer-name').value;
+    const bPhone = document.getElementById('buyer-phone').value;
+    
+    // التحقق من البيانات
+    if(!bName || !bPhone) return alert("الرجاء إدخال اسمك ورقم هاتفك لإتمام الطلب");
+
+    // بناء الرسالة بشكل احترافي ومرتب
+    let msg = `🔥 *طلب شراء حساب ببجي جديد* 🔥\n\n` +
+              `🎮 *اسم الحساب:* ${tempPubg.acc}\n` +
+              `👤 *اسم البائع:* ${tempPubg.seller}\n` +
+              `💰 *السعر:* ${tempPubg.price} د.ل\n` +
+              `〰〰〰〰〰〰〰〰\n` +
+              `📝 *بيانات المشتري (الزبون):*\n` +
+              `👤 *الاسم:* ${bName}\n` +
+              `📱 *الرقم:* ${bPhone}\n\n` +
+              `✅ *يرجى التواصل لإتمام عملية الوساطة*`;
+
+    // إرسال الرسالة عبر واتساب
+    window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(msg)}`);
+}
 
         function renderProducts() {
             const draw = p => `
